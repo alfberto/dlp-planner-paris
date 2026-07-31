@@ -12,7 +12,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=1785000000" />
+  <link rel="stylesheet" href="style.css?v=1785010000" />
 </head>
 <body>
 
@@ -69,6 +69,69 @@
 
     <!-- Timeline del día -->
     <div class="day-timeline" id="day-timeline">
+      <!-- Filled by JS -->
+    </div>
+  </section>
+
+  <!-- ── ESPECTÁCULOS MEJOR COLOCADOS ─────────────────── -->
+  <section class="card card-highlights" aria-label="Espectáculos mejor colocados">
+    <h2 class="card-title">
+      <i data-lucide="sparkles" class="card-icon"></i>
+      Espectáculos mejor colocados
+    </h2>
+    <div class="highlights-list" id="highlights-list">
+      <!-- Filled by JS -->
+    </div>
+  </section>
+
+  <!-- ── CHECKLIST ───────────────────────────────────────── -->
+  <section class="card card-checklist" aria-label="Checklist de atracciones y espectáculos">
+    <h2 class="card-title">
+      <i data-lucide="list-checks" class="card-icon"></i>
+      Checklist del viaje
+      <span class="checklist-count" id="checklist-count"></span>
+    </h2>
+
+    <div class="checklist-tabs" id="checklist-tabs">
+      <button class="chk-tab active" data-chk-cat="dlp">🏰 Disneyland Park</button>
+      <button class="chk-tab" data-chk-cat="daw">🎬 Adventure World</button>
+      <button class="chk-tab" data-chk-cat="shows">⭐ Espectáculos</button>
+      <button class="chk-tab" data-chk-cat="meals">🍴 Restaurantes</button>
+    </div>
+
+    <div class="checklist-list" id="checklist-list">
+      <!-- Filled by JS -->
+    </div>
+
+    <button class="reset-btn" id="checklist-reset">
+      <i data-lucide="rotate-ccw"></i>
+      Reiniciar checklist
+    </button>
+  </section>
+
+  <!-- ── MAPA CON GEOLOCALIZACIÓN ─────────────────────── -->
+  <section class="card card-map" aria-label="Mapa y direcciones">
+    <h2 class="card-title">
+      <i data-lucide="map" class="card-icon"></i>
+      Mapa y direcciones
+    </h2>
+
+    <div class="map-status" id="map-status">
+      <button class="locate-btn" id="locate-btn">
+        <i data-lucide="locate"></i>
+        Activar mi ubicación
+      </button>
+      <div class="map-hint">Toca un lugar para verlo en el mapa y cómo llegar</div>
+    </div>
+
+    <div class="poi-filter" id="poi-filter">
+      <button class="poi-filter-btn active" data-poi-cat="all">Todos</button>
+      <button class="poi-filter-btn" data-poi-cat="attraction">Atracciones</button>
+      <button class="poi-filter-btn" data-poi-cat="show">Shows</button>
+      <button class="poi-filter-btn" data-poi-cat="meal">Restaurantes</button>
+    </div>
+
+    <div class="poi-list" id="poi-list">
       <!-- Filled by JS -->
     </div>
   </section>
@@ -253,13 +316,13 @@
       <i data-lucide="calendar-check"></i>
       <span>Plan</span>
     </button>
-    <button class="nav-btn" data-scroll="card-weather">
-      <i data-lucide="cloud-sun"></i>
-      <span>Clima</span>
+    <button class="nav-btn" data-scroll="card-checklist">
+      <i data-lucide="list-checks"></i>
+      <span>Checklist</span>
     </button>
-    <button class="nav-btn" data-scroll="card-shows">
-      <i data-lucide="star"></i>
-      <span>Shows</span>
+    <button class="nav-btn" data-scroll="card-map">
+      <i data-lucide="map"></i>
+      <span>Mapa</span>
     </button>
     <button class="nav-btn" data-scroll="card-attractions">
       <i data-lucide="zap"></i>
@@ -267,6 +330,6 @@
     </button>
   </nav>
 
-  <script src="app.js?v=1785000000"></script>
+  <script src="app.js?v=1785010000"></script>
 </body>
 </html>

@@ -136,6 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initBottomNav();
   initProgress();
   renderPlan();
+  renderHighlights();
+  initChecklist();
+  initMap();
 
   // Clima e.g. y colas en paralelo
   loadWeather();
@@ -578,85 +581,149 @@ function setText(id, text) {
    Fuente: itinerario PDF + horarios oficiales de espectáculos
    ═══════════════════════════════════════════════════════════════ */
 
+// === PLAN DEFINITIVO POR ZONAS (v4) ===
 const TRIP_DAYS = [
   {
     key: 'mie', date: '2026-08-19', dow: 'Mié', day: 19, label: 'Miércoles 19',
     park: 'Disneyland Park',
-    reservation: { name: "Silver Spur Steakhouse", time: '15:15', emoji: '🥩' },
+    zone: 'Frontierland + Discoveryland',
+    reservation: { name: 'Silver Spur Steakhouse', time: '15:15', emoji: '🥩', zone: 'Frontierland' },
     items: [
-      { time: '08:30', title: 'Llegada al hotel', meta: 'Check-in temprano y equipaje en consigna', emoji: '🏨' },
-      { time: '09:00', title: 'Disneyland Park — primeras horas', meta: 'Peter Pan, Dumbo, Buzz Lightyear, Big Thunder, Pirates', badge: 'dlp', emoji: '🏰' },
-      { time: '11:30', title: 'Disney Stars on Parade', meta: 'Cabalgata principal', arrive: 30, rating: 4, kind: 'show' },
-      { time: '12:30', title: 'The Lion King', meta: '1ª sesión — imprescindible', arrive: 30, rating: 5, kind: 'show' },
-      { time: '15:15', title: "Comida: Silver Spur Steakhouse", meta: 'Reserva confirmada', kind: 'meal', emoji: '🥩' },
-      { time: '16:05', title: 'The Lion King (2ª sesión)', meta: 'Mejor opción si coméis tranquilos', arrive: 40, rating: 5, kind: 'show', note: 'Si ya lo habéis visto, aprovechad Fantasyland para atracciones familiares.' },
-      { time: '17:55', title: 'A Million Splashes of Colour', meta: 'Show acuático', arrive: 20, rating: 3, kind: 'show' },
-      { time: '19:00', title: 'Main Street y compras', meta: 'Paseo tranquilo antes del show nocturno', emoji: '🛍️' },
-      { time: '22:00', title: 'Disney Tales of Magic', meta: 'Espectáculo nocturno del castillo', arrive: 75, rating: 5, kind: 'show', highlight: true },
+      { time: '08:30', title: 'Llegada al hotel', meta: 'Check-in, maletas y acceso al parque', emoji: '🏨' },
+      { time: '09:00', title: 'Discoveryland', meta: 'Buzz Lightyear, Star Tours y Orbitron', badge: 'dlp', zone: 'Discoveryland', emoji: '🚀' },
+      { time: '10:45', title: 'Main Street / Central Plaza', meta: 'Personajes, Castillo y espectáculo diurno si coincide', badge: 'dlp', zone: 'Central Plaza', emoji: '🏰' },
+      { time: '12:30', title: 'Frontierland', meta: 'Phantom Manor, Thunder Mesa y Big Thunder Mountain', badge: 'dlp', zone: 'Frontierland', emoji: '🤠' },
+      { time: '15:15', title: 'Comida: Silver Spur Steakhouse', meta: 'Reserva confirmada · Dentro de Frontierland', kind: 'meal', emoji: '🥩' },
+      { time: '16:45', title: 'Frontierland (tarde)', meta: 'Riverboat, estación de Frontierland y repetir Big Thunder', badge: 'dlp', zone: 'Frontierland', emoji: '🚢' },
+      { time: '18:30', title: 'Main Street', meta: 'Cabalgata, tiendas y descanso', emoji: '🛍️' },
+      { time: '22:00', title: 'Disney Tales of Magic', meta: 'Espectáculo nocturno · Central Plaza', arrive: 75, rating: 5, kind: 'show', highlight: true },
     ]
   },
   {
     key: 'jue', date: '2026-08-20', dow: 'Jue', day: 20, label: 'Jueves 20',
-    park: 'Disney Adventure World',
-    reservation: { name: 'Agrabah Cafe Restaurant', time: '15:30', emoji: '🧞' },
+    park: 'Disneyland Park',
+    zone: 'Fantasyland + Adventureland',
+    reservation: { name: 'Agrabah Café', time: '15:30', emoji: '🧞', zone: 'Adventureland' },
     items: [
-      { time: '08:30', title: 'Extra Magic Time', meta: 'Acceso directo a Adventure World con la pulsera del hotel', emoji: '✨' },
-      { time: '09:00', title: 'Adventure World — primeras horas', meta: 'Spider-Man W.E.B., Ratatouille, Cars Road Trip, Toy Story, Crush’s Coaster', badge: 'daw', emoji: '🎬' },
-      { time: '11:45', title: 'Mickey and the Magician', meta: 'Show interior — muy recomendado para los niños', arrive: 30, rating: 5, kind: 'show' },
-      { time: '13:15', title: 'TOGETHER: A Pixar Musical Adventure', meta: 'Show musical exterior', arrive: 25, rating: 4, kind: 'show' },
-      { time: '15:30', title: 'Comida: Agrabah Cafe Restaurant', meta: 'Reserva confirmada · Ambiente Aladdin', kind: 'meal', emoji: '🧞' },
-      { time: '16:30', title: 'Mickey and the Magician (repetición opcional)', meta: 'O aprovechar para Marvel Campus', arrive: 25, rating: 4, kind: 'show' },
-      { time: '18:00', title: 'TOGETHER (2ª sesión)', meta: 'Alternativa si os perdéis la primera', arrive: 20, rating: 4, kind: 'show' },
-      { time: '19:30', title: 'Disney Village', meta: 'Paseo, tiendas y cena ligera', emoji: '🌌' },
-      { time: '20:30', title: 'Avengers Unite!', meta: 'Solo si se programa ese día — comprobar en la app', arrive: 25, rating: 4, kind: 'show' },
+      { time: '09:00', title: 'Fantasyland', meta: 'Peter Pan, Dumbo, Pinocho y Blancanieves', badge: 'dlp', zone: 'Fantasyland', emoji: '🏰' },
+      { time: '11:30', title: "It's a Small World", meta: 'Clásico para los niños', badge: 'dlp', zone: 'Fantasyland', emoji: '🌍' },
+      { time: '12:15', title: 'Laberinto de Alicia + Castillo', meta: 'Atracciones tranquilas y tiendas', badge: 'dlp', zone: 'Fantasyland', emoji: '🕶️' },
+      { time: '13:30', title: 'Adventureland', meta: 'Isla de la Aventura y zona de Aladdin', badge: 'dlp', zone: 'Adventureland', emoji: '🏝️' },
+      { time: '15:30', title: 'Comida: Agrabah Café', meta: 'Reserva confirmada · Entrada de Adventureland', kind: 'meal', emoji: '🧞' },
+      { time: '17:00', title: 'Pirates of the Caribbean + Adventure Isle', meta: 'Atracción imprescindible', badge: 'dlp', zone: 'Adventureland', emoji: '🏴‍☠️' },
+      { time: '18:30', title: 'Fantasyland / Central Plaza', meta: 'Atracciones tranquilas y cabalgata', emoji: '🎡' },
+      { time: '20:00', title: 'Cabalgata Disney Stars on Parade', meta: 'Main Street / Central Plaza', arrive: 30, rating: 4, kind: 'show' },
+      { time: '22:00', title: 'Espectáculo nocturno (opcional)', meta: 'O regreso temprano al hotel', kind: 'show', rating: 5 },
     ]
   },
   {
     key: 'vie', date: '2026-08-21', dow: 'Vie', day: 21, label: 'Viernes 21',
-    park: 'Disneyland Park',
-    reservation: { name: 'PYM Kitchen', time: '15:15', emoji: '🥪' },
+    park: 'Disney Adventure World',
+    zone: 'Frozen + Pixar + Marvel',
+    reservation: { name: 'PYM Kitchen', time: '15:15', emoji: '🥪', zone: 'Avengers Campus' },
     items: [
-      { time: '08:30', title: 'Regreso a Disneyland Park', meta: 'Extra Magic Time del hotel', emoji: '🏰' },
-      { time: '09:00', title: 'Atracciones pendientes', meta: 'Big Thunder, Hyperspace Mountain, Pirates, Buzz, Star Tours', badge: 'dlp', emoji: '🎢' },
-      { time: '11:30', title: 'Disney Stars on Parade', meta: 'Cabalgata principal', arrive: 30, rating: 4, kind: 'show' },
-      { time: '13:30', title: 'The Lion King', meta: 'Sesión de mediodía', arrive: 30, rating: 5, kind: 'show' },
-      { time: '15:15', title: 'Comida: PYM Kitchen', meta: 'Reserva confirmada · Marvel Campus (Adventure World)', kind: 'meal', emoji: '🥪', note: 'PYM Kitchen está en Adventure World. Cruzar al otro parque — unos 5 min andando.' },
-      { time: '15:30', title: 'A Million Splashes of Colour', meta: 'Show acuático (si os da tiempo)', arrive: 20, rating: 3, kind: 'show' },
-      { time: '17:05', title: 'The Lion King (2ª sesión)', meta: 'Repetición si os encantó', arrive: 40, rating: 5, kind: 'show' },
-      { time: '18:30', title: 'Personajes, fotos y compras', meta: 'Cabalgata sorpresa, encuentros y Main Street', emoji: '📸' },
-      { time: '22:00', title: 'Disney Tales of Magic', meta: 'Espectáculo nocturno del castillo', arrive: 75, rating: 5, kind: 'show', highlight: true },
+      { time: '08:45', title: 'Entrada temprana', meta: 'Solicitar cola virtual para Elsa y Anna en la app', emoji: '✨', highlight: true, note: 'La cola virtual para conocer a Elsa y Anna se obtiene desde la app oficial una vez dentro del parque.' },
+      { time: '09:00', title: 'World of Frozen', meta: 'Frozen Ever After, Arendelle y tiendas', badge: 'daw', zone: 'World of Frozen', emoji: '❄️' },
+      { time: '11:30', title: 'A Celebration in Arendelle', meta: 'Consultar horario en la app', arrive: 30, rating: 4, kind: 'show' },
+      { time: '12:00', title: 'Adventure Way', meta: 'Raiponce Tangled Spin y paseo por el lago', badge: 'daw', zone: 'Adventure Way', emoji: '🐸' },
+      { time: '13:00', title: 'Worlds of Pixar', meta: 'Ratatouille y Cars Road Trip', badge: 'daw', zone: 'Worlds of Pixar', emoji: '🐀' },
+      { time: '15:15', title: 'Comida: PYM Kitchen', meta: 'Reserva confirmada · Avengers Campus', kind: 'meal', emoji: '🥪' },
+      { time: '16:45', title: 'Avengers Campus', meta: 'Spider-Man W.E.B., Flight Force y apariciones Marvel', badge: 'daw', zone: 'Avengers Campus', emoji: '🦸' },
+      { time: '19:00', title: 'Mickey and the Magician', meta: 'World Premiere Plaza (si encaja con la última sesión)', arrive: 30, rating: 5, kind: 'show' },
+      { time: '22:00', title: 'Disney Cascade of Lights', meta: 'Espectáculo nocturno · Adventure Bay', arrive: 60, rating: 5, kind: 'show', highlight: true },
     ]
   },
   {
     key: 'sab', date: '2026-08-22', dow: 'Sáb', day: 22, label: 'Sábado 22',
-    park: 'Día flexible',
-    reservation: { name: "Captain Jack's", time: '14:45', emoji: '🏴‍☠️' },
+    park: 'Disneyland Park',
+    zone: 'Adventureland + Fantasyland',
+    reservation: { name: "Captain Jack's", time: '14:45', emoji: '🏴‍☠️', zone: 'Adventureland' },
     items: [
-      { time: '09:00', title: 'Día flexible', meta: 'Repetir favoritas y completar pendientes', emoji: '⭐' },
-      { time: '09:30', title: 'Atracciones favoritas', meta: 'Encuentros con personajes y fotos', badge: 'dlp', emoji: '🎡' },
-      { time: '11:30', title: 'Disney Stars on Parade', meta: 'Cabalgata (última oportunidad)', arrive: 30, rating: 4, kind: 'show' },
-      { time: '13:15', title: 'Mickey and the Magician', meta: 'En Adventure World — imprescindible', arrive: 25, rating: 5, kind: 'show' },
-      { time: '14:45', title: "Comida: Captain Jack's", meta: 'Reserva confirmada · DENTRO de Pirates of the Caribbean', kind: 'meal', emoji: '🏴‍☠️', note: 'Ambientación imprescindible: la mesa está a orillas del agua dentro de la atracción.' },
-      { time: '15:00', title: 'Frozen — A Celebration in Arendelle', meta: 'Show musical en Adventure World', arrive: 30, rating: 4, kind: 'show' },
-      { time: '17:00', title: 'Fotos, compras y ritmo relajado', meta: 'Ritmo tranquilo para preparar la última noche', emoji: '🛍️' },
+      { time: '09:00', title: 'Pirates of the Caribbean', meta: 'Ir pronto antes de que crezca la cola', badge: 'dlp', zone: 'Adventureland', emoji: '🏴‍☠️' },
+      { time: '10:30', title: 'Adventure Isle', meta: 'Cuevas y puente colgante', badge: 'dlp', zone: 'Adventureland', emoji: '🌴' },
+      { time: '11:45', title: 'Cabaña de Robinson + Indiana Jones', meta: 'Zona alta de Adventureland', badge: 'dlp', zone: 'Adventureland', emoji: '🎩' },
+      { time: '12:45', title: 'Fotos y atracciones pendientes', meta: 'Paseo tranquilo por Adventureland', emoji: '📸' },
+      { time: '14:45', title: "Comida: Captain Jack's", meta: 'Reserva confirmada · DENTRO de Pirates of the Caribbean', kind: 'meal', emoji: '🏴‍☠️', note: 'La mesa está a orillas del agua dentro de la atracción. Ambientación imprescindible.' },
+      { time: '16:15', title: 'Fantasyland', meta: 'Atracciones que falten o repetir favoritas', badge: 'dlp', zone: 'Fantasyland', emoji: '🎡' },
+      { time: '18:00', title: 'Main Street', meta: 'Cabalgata, compras y fotos', emoji: '🛍️' },
+      { time: '20:00', title: 'Disney Stars on Parade (2° pase)', meta: 'Consultar horario ese día', arrive: 30, rating: 4, kind: 'show' },
       { time: '22:00', title: 'Disney Tales of Magic', meta: 'ÚLTIMA NOCHE — llegad con tiempo', arrive: 75, rating: 5, kind: 'show', highlight: true },
     ]
   },
   {
     key: 'dom', date: '2026-08-23', dow: 'Dom', day: 23, label: 'Domingo 23',
-    park: 'Día de salida',
+    park: 'Disney Adventure World',
+    zone: 'Frozen + Adventure Way',
     reservation: null,
     items: [
-      { time: '08:00', title: 'Desayuno y check-out', meta: 'Dejar equipaje en consigna', emoji: '🥐' },
-      { time: '09:00', title: 'Últimas atracciones', meta: 'Repetir favoritas antes de comer', badge: 'dlp', emoji: '🎢' },
-      { time: '11:30', title: 'Disney Stars on Parade', meta: 'Cabalgata de despedida', arrive: 30, rating: 4, kind: 'show' },
-      { time: '12:30', title: 'The Lion King', meta: 'Solo si os da tiempo antes de comer', arrive: 30, rating: 5, kind: 'show', note: 'Con la salida a las 16:00 hacia Orly, saltarse el show si veis apretado el tiempo.' },
-      { time: '13:00', title: 'Comida de despedida', meta: 'Downtown Restaurant (buffet) o quick service en el parque', emoji: '🍰' },
-      { time: '14:30', title: 'Recoger equipaje', meta: 'Preparar salida', emoji: '🧳' },
-      { time: '16:00', title: 'Salida en van privado hacia Orly', meta: '~1 h de trayecto · margen amplio para el vuelo', emoji: '🚐', highlight: true },
+      { time: '09:00', title: 'World of Frozen', meta: 'Repetir Frozen Ever After o intentar el encuentro con Elsa y Anna', badge: 'daw', zone: 'World of Frozen', emoji: '❄️' },
+      { time: '11:00', title: 'Disney Princess Cavalcade', meta: 'Adventure Bay — consultar horario', arrive: 20, rating: 4, kind: 'show' },
+      { time: '12:00', title: 'Adventure Way / Pixar', meta: 'Raiponce, Ratatouille o atracciones pendientes', badge: 'daw', zone: 'Adventure Way', emoji: '🎢' },
+      { time: '13:30', title: 'Comida rápida', meta: 'En la zona que hayáis elegido', emoji: '🍰' },
+      { time: '14:15', title: 'Hotel: recoger equipaje', meta: 'Preparar salida', emoji: '🧳' },
+      { time: '15:30', title: 'Salida en van privado hacia Paris-Orly', meta: '~1 h de trayecto', emoji: '🚐', highlight: true, note: 'Disney Cascade of Lights se celebra de noche y NO encaja el domingo por la salida al aeropuerto.' },
+      { time: '17:00', title: 'Llegada estimada a ORY', meta: 'Margen amplio para facturación y controles', emoji: '🛩️' },
       { time: '20:40', title: 'Vuelo de regreso', meta: 'Paris-Orly → casa', emoji: '✈️' },
     ]
   },
+];
+
+// Espectáculos mejor colocados (resumen curado por día)
+const SHOW_HIGHLIGHTS = [
+  { day: 'Miércoles', name: 'Espectáculo diurno + Disney Tales of Magic', zone: 'Central Plaza', emoji: '🏰' },
+  { day: 'Jueves', name: 'Cabalgata de Disneyland Park', zone: 'Main Street / Central Plaza', emoji: '🚂' },
+  { day: 'Viernes', name: 'A Celebration in Arendelle', zone: 'World of Frozen', emoji: '❄️' },
+  { day: 'Viernes', name: 'Mickey and the Magician', zone: 'World Premiere Plaza', emoji: '🎩' },
+  { day: 'Viernes', name: 'Disney Cascade of Lights', zone: 'Adventure Bay', emoji: '✨' },
+  { day: 'Sábado', name: 'Cabalgata + Disney Tales of Magic', zone: 'Main Street / Central Plaza', emoji: '🎇' },
+  { day: 'Domingo', name: 'Disney Princess Cavalcade', zone: 'Adventure Bay', emoji: '👑' },
+];
+
+// Puntos de interés con coordenadas reales (Disneyland Paris, Chessy)
+const POINTS_OF_INTEREST = [
+  // === ATRACCIONES DISNEYLAND PARK ===
+  { id: 'peter-pan',    name: "Peter Pan's Flight",       cat: 'attraction', park: 'dlp', zone: 'Fantasyland',   lat: 48.8735, lon: 2.7776, emoji: '🧚' },
+  { id: 'big-thunder',  name: 'Big Thunder Mountain',     cat: 'attraction', park: 'dlp', zone: 'Frontierland',  lat: 48.8724, lon: 2.7754, emoji: '🚠' },
+  { id: 'pirates',      name: 'Pirates of the Caribbean', cat: 'attraction', park: 'dlp', zone: 'Adventureland', lat: 48.8721, lon: 2.7767, emoji: '🏴‍☠️' },
+  { id: 'phantom-manor',name: 'Phantom Manor',            cat: 'attraction', park: 'dlp', zone: 'Frontierland',  lat: 48.8721, lon: 2.7748, emoji: '👻' },
+  { id: 'buzz',         name: 'Buzz Lightyear Laser Blast', cat: 'attraction', park: 'dlp', zone: 'Discoveryland', lat: 48.8733, lon: 2.7788, emoji: '🚀' },
+  { id: 'star-tours',   name: 'Star Tours',               cat: 'attraction', park: 'dlp', zone: 'Discoveryland', lat: 48.8734, lon: 2.7791, emoji: '⭐' },
+  { id: 'hyperspace',   name: 'Hyperspace Mountain',      cat: 'attraction', park: 'dlp', zone: 'Discoveryland', lat: 48.8737, lon: 2.7789, emoji: '🚀' },
+  { id: 'small-world',  name: "It's a Small World",       cat: 'attraction', park: 'dlp', zone: 'Fantasyland',   lat: 48.8738, lon: 2.7772, emoji: '🌍' },
+  { id: 'dumbo',        name: 'Dumbo the Flying Elephant',cat: 'attraction', park: 'dlp', zone: 'Fantasyland',   lat: 48.8736, lon: 2.7774, emoji: '🐘' },
+  { id: 'alice',        name: 'Laberinto de Alicia',      cat: 'attraction', park: 'dlp', zone: 'Fantasyland',   lat: 48.8734, lon: 2.7773, emoji: '🍄' },
+  { id: 'adventure-isle', name: 'Adventure Isle',         cat: 'attraction', park: 'dlp', zone: 'Adventureland', lat: 48.8724, lon: 2.7765, emoji: '🌴' },
+  { id: 'indiana',      name: 'Indiana Jones Temple of Peril', cat: 'attraction', park: 'dlp', zone: 'Adventureland', lat: 48.8722, lon: 2.7763, emoji: '🎩' },
+  { id: 'robinson',     name: 'Cabaña de Robinson',       cat: 'attraction', park: 'dlp', zone: 'Adventureland', lat: 48.8725, lon: 2.7762, emoji: '🏡' },
+  { id: 'orbitron',     name: 'Orbitron',                 cat: 'attraction', park: 'dlp', zone: 'Discoveryland', lat: 48.8735, lon: 2.7786, emoji: '🪐' },
+  { id: 'riverboat',    name: 'Thunder Mesa Riverboat',   cat: 'attraction', park: 'dlp', zone: 'Frontierland',  lat: 48.8723, lon: 2.7752, emoji: '🚢' },
+
+  // === ATRACCIONES ADVENTURE WORLD ===
+  { id: 'frozen-ever-after', name: 'Frozen Ever After',   cat: 'attraction', park: 'daw', zone: 'World of Frozen', lat: 48.8676, lon: 2.7802, emoji: '❄️' },
+  { id: 'raiponce',     name: 'Raiponce Tangled Spin',    cat: 'attraction', park: 'daw', zone: 'Adventure Way',  lat: 48.8672, lon: 2.7810, emoji: '👸' },
+  { id: 'ratatouille',  name: 'Ratatouille: L’Aventure',  cat: 'attraction', park: 'daw', zone: 'Worlds of Pixar', lat: 48.8686, lon: 2.7825, emoji: '🐀' },
+  { id: 'cars',         name: 'Cars Road Trip',           cat: 'attraction', park: 'daw', zone: 'Worlds of Pixar', lat: 48.8688, lon: 2.7820, emoji: '🚗' },
+  { id: 'crush',        name: "Crush's Coaster",          cat: 'attraction', park: 'daw', zone: 'Worlds of Pixar', lat: 48.8687, lon: 2.7822, emoji: '🐢' },
+  { id: 'toy-story',    name: 'Toy Story Playland',       cat: 'attraction', park: 'daw', zone: 'Worlds of Pixar', lat: 48.8689, lon: 2.7828, emoji: '🧸' },
+  { id: 'spider',       name: 'Spider-Man W.E.B. Adventure', cat: 'attraction', park: 'daw', zone: 'Avengers Campus', lat: 48.8683, lon: 2.7815, emoji: '🕷️' },
+  { id: 'flight-force', name: 'Avengers Assemble: Flight Force', cat: 'attraction', park: 'daw', zone: 'Avengers Campus', lat: 48.8685, lon: 2.7818, emoji: '🚀' },
+
+  // === ESPECTÁCULOS ===
+  { id: 'tales-magic',  name: 'Disney Tales of Magic',      cat: 'show', park: 'dlp', zone: 'Central Plaza', lat: 48.8730, lon: 2.7770, emoji: '🎇' },
+  { id: 'stars-parade', name: 'Disney Stars on Parade',     cat: 'show', park: 'dlp', zone: 'Main Street',  lat: 48.8727, lon: 2.7770, emoji: '🚂' },
+  { id: 'lion-king',    name: 'The Lion King',              cat: 'show', park: 'dlp', zone: 'Fantasyland',  lat: 48.8739, lon: 2.7775, emoji: '🦁' },
+  { id: 'splashes',     name: 'A Million Splashes of Colour', cat: 'show', park: 'dlp', zone: 'Central Plaza', lat: 48.8730, lon: 2.7772, emoji: '💧' },
+  { id: 'arendelle',    name: 'A Celebration in Arendelle', cat: 'show', park: 'daw', zone: 'World of Frozen', lat: 48.8676, lon: 2.7804, emoji: '❄️' },
+  { id: 'mickey-magic', name: 'Mickey and the Magician',    cat: 'show', park: 'daw', zone: 'World Premiere Plaza', lat: 48.8695, lon: 2.7808, emoji: '🎩' },
+  { id: 'together',     name: 'TOGETHER: A Pixar Musical',  cat: 'show', park: 'daw', zone: 'Worlds of Pixar', lat: 48.8687, lon: 2.7823, emoji: '🎤' },
+  { id: 'cascade',      name: 'Disney Cascade of Lights',   cat: 'show', park: 'daw', zone: 'Adventure Bay', lat: 48.8680, lon: 2.7815, emoji: '✨' },
+  { id: 'princess-cav', name: 'Disney Princess Cavalcade',  cat: 'show', park: 'daw', zone: 'Adventure Bay', lat: 48.8680, lon: 2.7815, emoji: '👑' },
+
+  // === RESTAURANTES CON RESERVA ===
+  { id: 'silver-spur',  name: 'Silver Spur Steakhouse',  cat: 'meal', park: 'dlp', zone: 'Frontierland',    lat: 48.8724, lon: 2.7751, emoji: '🥩', reservation: '19 ago · 15:15' },
+  { id: 'agrabah',      name: 'Agrabah Café',            cat: 'meal', park: 'dlp', zone: 'Adventureland',   lat: 48.8722, lon: 2.7768, emoji: '🧞', reservation: '20 ago · 15:30' },
+  { id: 'pym',          name: 'PYM Kitchen',             cat: 'meal', park: 'daw', zone: 'Avengers Campus', lat: 48.8684, lon: 2.7817, emoji: '🥪', reservation: '21 ago · 15:15' },
+  { id: 'captains-jack',name: "Captain Jack's",          cat: 'meal', park: 'dlp', zone: 'Adventureland',   lat: 48.8721, lon: 2.7766, emoji: '🏴‍☠️', reservation: '22 ago · 14:45' },
 ];
 
 let PLAN_ACTIVE_KEY = null;
@@ -757,4 +824,229 @@ function renderPlan() {
 
   // Reinicializar iconos (aunque no hay lucide en timeline)
   if (window.lucide) lucide.createIcons();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ESPECTÁCULOS MEJOR COLOCADOS
+   ═══════════════════════════════════════════════════════════════ */
+function renderHighlights() {
+  const el = document.getElementById('highlights-list');
+  if (!el) return;
+  el.innerHTML = SHOW_HIGHLIGHTS.map(h => `
+    <div class="hl-item">
+      <div class="hl-emoji">${h.emoji}</div>
+      <div class="hl-body">
+        <div class="hl-day">${h.day}</div>
+        <div class="hl-name">${h.name}</div>
+        <div class="hl-zone">📍 ${h.zone}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CHECKLIST DEL VIAJE
+   ═══════════════════════════════════════════════════════════════ */
+const CHK_STORAGE = 'dlp-checklist-v1';
+let CHK_ACTIVE_CAT = 'dlp';
+
+function chkLoad() {
+  try {
+    return JSON.parse(localStorage.getItem(CHK_STORAGE) || '{}');
+  } catch { return {}; }
+}
+function chkSave(data) {
+  try { localStorage.setItem(CHK_STORAGE, JSON.stringify(data)); } catch {}
+}
+
+function chkItemsFor(cat) {
+  if (cat === 'dlp') return POINTS_OF_INTEREST.filter(p => p.cat === 'attraction' && p.park === 'dlp');
+  if (cat === 'daw') return POINTS_OF_INTEREST.filter(p => p.cat === 'attraction' && p.park === 'daw');
+  if (cat === 'shows') return POINTS_OF_INTEREST.filter(p => p.cat === 'show');
+  if (cat === 'meals') return POINTS_OF_INTEREST.filter(p => p.cat === 'meal');
+  return [];
+}
+
+function renderChecklist() {
+  const list = document.getElementById('checklist-list');
+  if (!list) return;
+
+  const data = chkLoad();
+  const items = chkItemsFor(CHK_ACTIVE_CAT);
+
+  list.innerHTML = items.map(it => `
+    <div class="chk-item ${data[it.id] ? 'done' : ''}" data-chk-id="${it.id}">
+      <div class="chk-emoji">${it.emoji}</div>
+      <div class="chk-body">
+        <div class="chk-name">${it.name}</div>
+        <div class="chk-zone">📍 ${it.zone}${it.reservation ? ' · ' + it.reservation : ''}</div>
+      </div>
+      <button class="chk-btn" data-chk-toggle="${it.id}" aria-label="Marcar como visto">
+        <span class="checkmark">✓</span>
+        <span class="label-todo">Marcar</span>
+        <span class="label-done">Visto</span>
+      </button>
+    </div>
+  `).join('');
+
+  // Total contador (todos los items)
+  const allIds = POINTS_OF_INTEREST.map(p => p.id);
+  const done = allIds.filter(id => data[id]).length;
+  const cnt = document.getElementById('checklist-count');
+  if (cnt) cnt.textContent = `${done} / ${allIds.length}`;
+
+  // Bind toggles
+  list.querySelectorAll('[data-chk-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.chkToggle;
+      const d = chkLoad();
+      if (d[id]) delete d[id]; else d[id] = new Date().toISOString();
+      chkSave(d);
+      renderChecklist();
+    });
+  });
+}
+
+function initChecklist() {
+  document.querySelectorAll('.chk-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.chk-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      CHK_ACTIVE_CAT = tab.dataset.chkCat;
+      renderChecklist();
+    });
+  });
+  const reset = document.getElementById('checklist-reset');
+  if (reset) reset.addEventListener('click', () => {
+    if (confirm('¿Reiniciar todos los elementos marcados?')) {
+      chkSave({});
+      renderChecklist();
+    }
+  });
+  renderChecklist();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MAPA CON GEOLOCALIZACIÓN
+   ═══════════════════════════════════════════════════════════════ */
+let USER_LOCATION = null;
+let POI_ACTIVE_CAT = 'all';
+
+function haversineMeters(lat1, lon1, lat2, lon2) {
+  const R = 6371000; // radio de la Tierra
+  const toRad = d => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function formatDistance(m) {
+  if (m < 1000) return `${Math.round(m)} m`;
+  return `${(m / 1000).toFixed(1)} km`;
+}
+
+function renderPOIs() {
+  const list = document.getElementById('poi-list');
+  if (!list) return;
+
+  let items = POINTS_OF_INTEREST.slice();
+  if (POI_ACTIVE_CAT !== 'all') {
+    items = items.filter(p => p.cat === POI_ACTIVE_CAT);
+  }
+
+  // Añadir distancia si tenemos ubicación
+  if (USER_LOCATION) {
+    items = items.map(p => ({
+      ...p,
+      distance: haversineMeters(USER_LOCATION.lat, USER_LOCATION.lon, p.lat, p.lon)
+    })).sort((a, b) => a.distance - b.distance);
+  }
+
+  const catLabels = { attraction: 'Atracción', show: 'Show', meal: 'Restaurante' };
+  const parkLabels = { dlp: 'Disneyland Park', daw: 'Adventure World' };
+
+  list.innerHTML = items.map(p => {
+    const distHTML = (p.distance != null)
+      ? `<span class="poi-distance">📍 ${formatDistance(p.distance)}</span>`
+      : '';
+    // URL de Google Maps para navegar (usa direcciones si hay origen)
+    const dest = `${p.lat},${p.lon}`;
+    const mapsUrl = USER_LOCATION
+      ? `https://www.google.com/maps/dir/?api=1&origin=${USER_LOCATION.lat},${USER_LOCATION.lon}&destination=${dest}&travelmode=walking`
+      : `https://www.google.com/maps/search/?api=1&query=${dest}`;
+    return `
+      <div class="poi-item ${p.cat}">
+        <div class="poi-emoji">${p.emoji}</div>
+        <div class="poi-body">
+          <div class="poi-name">${p.name}</div>
+          <div class="poi-meta">
+            <span>${catLabels[p.cat]} · ${p.zone}</span>
+            <span>${parkLabels[p.park] || ''}</span>
+            ${distHTML}
+          </div>
+        </div>
+        <a class="poi-nav-btn" href="${mapsUrl}" target="_blank" rel="noopener" aria-label="Cómo llegar">
+          <i data-lucide="navigation"></i>
+          Ir
+        </a>
+      </div>
+    `;
+  }).join('');
+
+  if (window.lucide) lucide.createIcons();
+}
+
+function initMap() {
+  const btn = document.getElementById('locate-btn');
+  const status = document.getElementById('map-status');
+
+  if (btn) btn.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      status.innerHTML = '<div class="map-hint">⚠️ Tu navegador no soporta geolocalización.</div>' + status.innerHTML;
+      return;
+    }
+    btn.textContent = '⏳ Obteniendo ubicación…';
+    btn.disabled = true;
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        USER_LOCATION = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        btn.innerHTML = '<i data-lucide="check-circle"></i> Ubicación activa';
+        btn.classList.add('active');
+        btn.disabled = false;
+        // Añadir info de ubicación
+        let info = document.getElementById('map-user-info');
+        if (!info) {
+          info = document.createElement('div');
+          info.id = 'map-user-info';
+          info.className = 'map-user-info';
+          status.appendChild(info);
+        }
+        info.innerHTML = `<i data-lucide="map-pin"></i> Ordenando por cercanía a ti`;
+        if (window.lucide) lucide.createIcons();
+        renderPOIs();
+      },
+      err => {
+        btn.innerHTML = '<i data-lucide="locate"></i> Activar mi ubicación';
+        btn.disabled = false;
+        if (window.lucide) lucide.createIcons();
+        let msg = 'No se pudo obtener tu ubicación.';
+        if (err.code === 1) msg = 'Has denegado el acceso a tu ubicación.';
+        if (err.code === 3) msg = 'Tiempo de espera agotado.';
+        alert(msg + ' Puedes usar el mapa sin ubicación tocando "Ir" en cualquier lugar.');
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  });
+
+  document.querySelectorAll('.poi-filter-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.poi-filter-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      POI_ACTIVE_CAT = b.dataset.poiCat;
+      renderPOIs();
+    });
+  });
+
+  renderPOIs();
 }
