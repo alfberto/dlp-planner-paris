@@ -12,7 +12,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=1785010000" />
+  <link rel="stylesheet" href="style.css?v=1785020000" />
 </head>
 <body>
 
@@ -103,11 +103,42 @@
       <!-- Filled by JS -->
     </div>
 
-    <button class="reset-btn" id="checklist-reset">
-      <i data-lucide="rotate-ccw"></i>
-      Reiniciar checklist
-    </button>
+    <div class="checklist-hint">
+      <i data-lucide="smartphone"></i>
+      <span>El progreso se guarda en <strong>este dispositivo</strong>. Los cambios sobreviven al refrescar y cerrar la app. Usa <strong>Exportar</strong> para compartir el avance con tu familia por WhatsApp.</span>
+    </div>
+
+    <div class="checklist-actions">
+      <button class="chk-action-btn export" id="checklist-export">
+        <i data-lucide="share-2"></i>
+        Exportar progreso
+      </button>
+      <button class="chk-action-btn import" id="checklist-import">
+        <i data-lucide="download"></i>
+        Importar progreso
+      </button>
+      <button class="reset-btn" id="checklist-reset">
+        <i data-lucide="rotate-ccw"></i>
+        Reiniciar
+      </button>
+    </div>
   </section>
+
+  <!-- Modal para exportar/importar -->
+  <div class="chk-modal" id="chk-modal" hidden>
+    <div class="chk-modal-content">
+      <button class="chk-modal-close" id="chk-modal-close" aria-label="Cerrar">
+        <i data-lucide="x"></i>
+      </button>
+      <h3 class="chk-modal-title" id="chk-modal-title">Compartir progreso</h3>
+      <p class="chk-modal-hint" id="chk-modal-hint"></p>
+      <textarea class="chk-modal-textarea" id="chk-modal-textarea" rows="5" spellcheck="false" autocomplete="off"></textarea>
+      <div class="chk-modal-actions">
+        <button class="chk-modal-btn primary" id="chk-modal-primary"></button>
+      </div>
+      <div class="chk-modal-feedback" id="chk-modal-feedback"></div>
+    </div>
+  </div>
 
   <!-- ── MAPA CON GEOLOCALIZACIÓN ─────────────────────── -->
   <section class="card card-map" aria-label="Mapa y direcciones">
@@ -330,6 +361,6 @@
     </button>
   </nav>
 
-  <script src="app.js?v=1785010000"></script>
+  <script src="app.js?v=1785020000"></script>
 </body>
 </html>

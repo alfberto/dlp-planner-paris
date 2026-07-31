@@ -138,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderPlan();
   renderHighlights();
   initChecklist();
+  initChecklistShare();
   initMap();
 
   // Clima e.g. y colas en paralelo
@@ -726,7 +727,9 @@ const POINTS_OF_INTEREST = [
   { id: 'captains-jack',name: "Captain Jack's",          cat: 'meal', park: 'dlp', zone: 'Adventureland',   lat: 48.8721, lon: 2.7766, emoji: '🏴‍☠️', reservation: '22 ago · 14:45' },
 ];
 
-let PLAN_ACTIVE_KEY = null;
+let PLAN_ACTIVE_KEY = (() => {
+  try { return localStorage.getItem('dlp-plan-active-day'); } catch { return null; }
+})();
 
 function todayTripKey() {
   const now = new Date();
@@ -756,6 +759,7 @@ function renderPlan() {
   tabs.querySelectorAll('.day-tab').forEach(btn => {
     btn.addEventListener('click', () => {
       PLAN_ACTIVE_KEY = btn.dataset.dayKey;
+      try { localStorage.setItem('dlp-plan-active-day', PLAN_ACTIVE_KEY); } catch {}
       renderPlan();
     });
   });
@@ -1049,4 +1053,125 @@ function initMap() {
   });
 
   renderPOIs();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EXPORTAR / IMPORTAR PROGRESO (compartir por WhatsApp)
+   ═══════════════════════════════════════════════════════════════ */
+function encodeProgress(data) {
+  // Solo IDs de items marcados como true — mucho más compacto
+  const ids = Object.keys(data);
+  const payload = JSON.stringify(ids);
+  // btoa admite ASCII; los IDs son slugs ASCII así que no hace falta escapar
+  return btoa(payload).replace(/=+$/, '');
+}
+function decodeProgress(code) {
+  code = code.trim().replace(/\s+/g, '');
+  // Restaurar padding base64
+  while (code.length % 4) code += '=';
+  const json = atob(code);
+  const ids = JSON.parse(json);
+  if (!Array.isArray(ids)) throw new Error('Formato inválido');
+  const now = new Date().toISOString();
+  const out = {};
+  ids.forEach(id => { if (typeof id === 'string') out[id] = now; });
+  return out;
+}
+
+function openChkModal(mode) {
+  const modal = document.getElementById('chk-modal');
+  const title = document.getElementById('chk-modal-title');
+  const hint = document.getElementById('chk-modal-hint');
+  const ta = document.getElementById('chk-modal-textarea');
+  const primary = document.getElementById('chk-modal-primary');
+  const feedback = document.getElementById('chk-modal-feedback');
+  feedback.textContent = '';
+  feedback.classList.remove('error');
+
+  if (mode === 'export') {
+    const data = chkLoad();
+    const ids = Object.keys(data);
+    const code = encodeProgress(data);
+    title.textContent = 'Compartir progreso';
+    hint.innerHTML = `Tienes <strong>${ids.length}</strong> elementos marcados. Copia este código y envíaselo por WhatsApp a tu familia — ellos podrán importarlo aquí.`;
+    ta.value = code;
+    ta.readOnly = true;
+    primary.innerHTML = '<i data-lucide="copy"></i> Copiar código';
+    primary.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(code);
+        feedback.textContent = '✓ Copiado al portapapeles';
+      } catch {
+        // Fallback: seleccionar el texto
+        ta.select();
+        try {
+          document.execCommand('copy');
+          feedback.textContent = '✓ Copiado al portapapeles';
+        } catch {
+          feedback.textContent = 'Selecciona el texto y cópialo manualmente';
+          feedback.classList.add('error');
+        }
+      }
+    };
+  } else {
+    title.textContent = 'Importar progreso';
+    hint.innerHTML = 'Pega aquí el código que te ha enviado tu familia. Se combinará con lo que ya tienes marcado (no borra nada).';
+    ta.value = '';
+    ta.readOnly = false;
+    ta.placeholder = 'Pega aquí el código…';
+    primary.innerHTML = '<i data-lucide="check"></i> Importar';
+    primary.onclick = () => {
+      const code = ta.value.trim();
+      if (!code) {
+        feedback.textContent = 'Introduce un código primero';
+        feedback.classList.add('error');
+        return;
+      }
+      try {
+        const imported = decodeProgress(code);
+        const current = chkLoad();
+        const merged = { ...current, ...imported };
+        chkSave(merged);
+        renderChecklist();
+        const added = Object.keys(imported).length;
+        feedback.textContent = `✓ ${added} elementos importados y combinados`;
+        feedback.classList.remove('error');
+        setTimeout(() => closeChkModal(), 1600);
+      } catch (e) {
+        feedback.textContent = '✗ Código inválido. Comprueba que lo has pegado completo.';
+        feedback.classList.add('error');
+      }
+    };
+  }
+
+  modal.hidden = false;
+  if (window.lucide) lucide.createIcons();
+  if (mode === 'export') {
+    // Seleccionar el texto para copiar rápido
+    setTimeout(() => { ta.select(); }, 100);
+  } else {
+    setTimeout(() => { ta.focus(); }, 100);
+  }
+}
+
+function closeChkModal() {
+  const modal = document.getElementById('chk-modal');
+  if (modal) modal.hidden = true;
+}
+
+function initChecklistShare() {
+  const exp = document.getElementById('checklist-export');
+  const imp = document.getElementById('checklist-import');
+  const close = document.getElementById('chk-modal-close');
+  const modal = document.getElementById('chk-modal');
+
+  if (exp) exp.addEventListener('click', () => openChkModal('export'));
+  if (imp) imp.addEventListener('click', () => openChkModal('import'));
+  if (close) close.addEventListener('click', closeChkModal);
+  if (modal) modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeChkModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeChkModal();
+  });
 }

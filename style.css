@@ -1467,3 +1467,174 @@ button { cursor: pointer; background: none; border: none; font: inherit; color: 
   color: white;
 }
 .poi-nav-btn i { width: 12px; height: 12px; }
+
+/* ─── HINT DE PERSISTENCIA ───────────────────────────────── */
+.checklist-hint {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  margin: 12px 0;
+  background: linear-gradient(135deg, rgba(91, 63, 166, 0.06), rgba(232, 62, 140, 0.05));
+  border: 1px solid rgba(91, 63, 166, 0.18);
+  border-radius: var(--radius-md);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+.checklist-hint i {
+  width: 16px;
+  height: 16px;
+  color: var(--color-primary);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.checklist-hint strong {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+/* ─── ACCIONES CHECKLIST ─────────────────────────────────── */
+.checklist-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.chk-action-btn {
+  flex: 1 1 auto;
+  min-width: 130px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.chk-action-btn i { width: 14px; height: 14px; }
+.chk-action-btn.export {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-magic));
+  color: white;
+  border-color: transparent;
+}
+.chk-action-btn.export:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.chk-action-btn.import {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-primary);
+}
+.chk-action-btn.import:hover {
+  background: rgba(91, 63, 166, 0.08);
+}
+
+/* ─── MODAL ──────────────────────────────────────────────── */
+.chk-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+.chk-modal[hidden] { display: none; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.chk-modal-content {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px 18px;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.chk-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  color: var(--color-text-muted);
+  border-radius: 50%;
+}
+.chk-modal-close:hover { background: var(--color-surface-offset); color: var(--color-text); }
+.chk-modal-close i { width: 18px; height: 18px; }
+.chk-modal-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px;
+  padding-right: 30px;
+}
+.chk-modal-hint {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin: 0 0 14px;
+  line-height: 1.4;
+}
+.chk-modal-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-offset);
+  color: var(--color-text);
+  font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+  font-size: 0.75rem;
+  resize: vertical;
+  min-height: 80px;
+  box-sizing: border-box;
+}
+.chk-modal-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(91, 63, 166, 0.15);
+}
+.chk-modal-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.chk-modal-btn {
+  padding: 9px 18px;
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.chk-modal-btn.primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-magic));
+  color: white;
+}
+.chk-modal-btn.primary:hover { filter: brightness(1.1); }
+.chk-modal-feedback {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  color: var(--color-success);
+  font-weight: 600;
+  min-height: 18px;
+  text-align: center;
+}
+.chk-modal-feedback.error { color: var(--color-magic); }
