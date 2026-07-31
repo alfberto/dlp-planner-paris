@@ -590,14 +590,15 @@ const TRIP_DAYS = [
     zone: 'Frontierland + Discoveryland',
     reservation: { name: 'Silver Spur Steakhouse', time: '15:15', emoji: '🥩', zone: 'Frontierland' },
     items: [
-      { time: '08:30', title: 'Llegada al hotel', meta: 'Check-in, maletas y acceso al parque', emoji: '🏨' },
-      { time: '09:00', title: 'Discoveryland', meta: 'Buzz Lightyear, Star Tours y Orbitron', badge: 'dlp', zone: 'Discoveryland', emoji: '🚀' },
-      { time: '10:45', title: 'Main Street / Central Plaza', meta: 'Personajes, Castillo y espectáculo diurno si coincide', badge: 'dlp', zone: 'Central Plaza', emoji: '🏰' },
-      { time: '12:30', title: 'Frontierland', meta: 'Phantom Manor, Thunder Mesa y Big Thunder Mountain', badge: 'dlp', zone: 'Frontierland', emoji: '🤠' },
+      { time: '07:45', title: 'Llegada a la entrada del parque', meta: 'Check-in previo o maletas ya listas · 20-30 min antes del EMT', emoji: '🏨', tag: 'Ritmo familiar' },
+      { time: '08:15', title: 'Extra Magic Time', meta: 'Directos a Peter Pan y después Buzz Lightyear. Si Big Thunder abre en EMT, priorizarlo.', badge: 'emt', zone: 'Fantasyland → Discoveryland', emoji: '✨', highlight: true, tag: 'Alta demanda', note: 'Comprobad la app oficial esa mañana: no todas las atracciones abren durante el acceso anticipado.' },
+      { time: '09:30', title: 'Discoveryland', meta: 'Star Tours, Orbitron y paseo por la zona', badge: 'dlp', zone: 'Discoveryland', emoji: '🚀', tag: 'Ruta compacta' },
+      { time: '11:00', title: 'Central Plaza', meta: 'Castillo, fotos y espectáculo diurno si encaja con el horario oficial', badge: 'dlp', zone: 'Central Plaza', emoji: '🏰', tag: 'Descanso' },
+      { time: '12:00', title: 'Frontierland', meta: 'Big Thunder Mountain, Phantom Manor, Thunder Mesa y Riverboat si está operativo', badge: 'dlp', zone: 'Frontierland', emoji: '🤠', tag: 'Quedar cerca' },
       { time: '15:15', title: 'Comida: Silver Spur Steakhouse', meta: 'Reserva confirmada · Dentro de Frontierland', kind: 'meal', emoji: '🥩' },
-      { time: '16:45', title: 'Frontierland (tarde)', meta: 'Riverboat, estación de Frontierland y repetir Big Thunder', badge: 'dlp', zone: 'Frontierland', emoji: '🚢' },
-      { time: '18:30', title: 'Main Street', meta: 'Cabalgata, tiendas y descanso', emoji: '🛍️' },
-      { time: '22:00', title: 'Disney Tales of Magic', meta: 'Espectáculo nocturno · Central Plaza', arrive: 75, rating: 5, kind: 'show', highlight: true },
+      { time: '16:45', title: 'Frontierland (tarde)', meta: 'Repetir Big Thunder o completar Phantom Manor / Riverboat', badge: 'dlp', zone: 'Frontierland', emoji: '🚢', tag: 'Sin cruces' },
+      { time: '18:30', title: 'Main Street', meta: 'Cabalgata, tiendas y tentempié ligero', emoji: '🛍️', tag: 'Bajar ritmo' },
+      { time: '22:00', title: 'Disney Tales of Magic', meta: 'Espectáculo nocturno · Central Plaza · Sitio 45-60 min antes para 9 personas', arrive: 60, rating: 5, kind: 'show', highlight: true, tag: 'Imprescindible' },
     ]
   },
   {
@@ -606,15 +607,15 @@ const TRIP_DAYS = [
     zone: 'Fantasyland + Adventureland',
     reservation: { name: 'Agrabah Café', time: '15:30', emoji: '🧞', zone: 'Adventureland' },
     items: [
-      { time: '09:00', title: 'Fantasyland', meta: 'Peter Pan, Dumbo, Pinocho y Blancanieves', badge: 'dlp', zone: 'Fantasyland', emoji: '🏰' },
-      { time: '11:30', title: "It's a Small World", meta: 'Clásico para los niños', badge: 'dlp', zone: 'Fantasyland', emoji: '🌍' },
-      { time: '12:15', title: 'Laberinto de Alicia + Castillo', meta: 'Atracciones tranquilas y tiendas', badge: 'dlp', zone: 'Fantasyland', emoji: '🕶️' },
-      { time: '13:30', title: 'Adventureland', meta: 'Isla de la Aventura y zona de Aladdin', badge: 'dlp', zone: 'Adventureland', emoji: '🏝️' },
+      { time: '07:45', title: 'Llegada al control de seguridad', meta: '20-30 min antes del inicio del EMT', emoji: '🏨', tag: 'Ritmo familiar' },
+      { time: '08:15', title: 'Extra Magic Time', meta: 'Peter Pan, Dumbo y una atracción pendiente de Fantasyland', badge: 'emt', zone: 'Fantasyland', emoji: '✨', highlight: true, tag: 'Prioridad infantil' },
+      { time: '09:30', title: 'Fantasyland', meta: "It's a Small World, Blancanieves, Pinocho, Carrousel y Laberinto de Alicia", badge: 'dlp', zone: 'Fantasyland', emoji: '🎠', tag: 'Zona única' },
+      { time: '11:45', title: 'Fantasyland (personajes)', meta: 'Castillo, tiendas y encuentro con personajes si la espera es razonable', badge: 'dlp', zone: 'Fantasyland', emoji: '👸', tag: 'Ritmo suave' },
+      { time: '13:15', title: 'Adventureland', meta: 'Pasaje de Aladdin, Adventure Isle y paseo hacia Agrabah', badge: 'dlp', zone: 'Adventureland', emoji: '🏝️', tag: 'Acercarse' },
       { time: '15:30', title: 'Comida: Agrabah Café', meta: 'Reserva confirmada · Entrada de Adventureland', kind: 'meal', emoji: '🧞' },
-      { time: '17:00', title: 'Pirates of the Caribbean + Adventure Isle', meta: 'Atracción imprescindible', badge: 'dlp', zone: 'Adventureland', emoji: '🏴‍☠️' },
-      { time: '18:30', title: 'Fantasyland / Central Plaza', meta: 'Atracciones tranquilas y cabalgata', emoji: '🎡' },
-      { time: '20:00', title: 'Cabalgata Disney Stars on Parade', meta: 'Main Street / Central Plaza', arrive: 30, rating: 4, kind: 'show' },
-      { time: '22:00', title: 'Espectáculo nocturno (opcional)', meta: 'O regreso temprano al hotel', kind: 'show', rating: 5 },
+      { time: '17:00', title: 'Pirates of the Caribbean + Adventure Isle', meta: 'Cabaña de Robinson y zona ya cercana · Evita cruzar el parque', badge: 'dlp', zone: 'Adventureland', emoji: '🏴‍☠️', tag: 'Sin desplazamiento', note: 'No hagáis Pirates antes de comer si tiene mucha cola. Después de las 17:00 encaja mejor con vuestra ubicación.' },
+      { time: '19:00', title: 'Central Plaza', meta: 'Cabalgata o espectáculo diurno según app', emoji: '🎡', tag: 'Flexible' },
+      { time: '22:00', title: 'Noche opcional', meta: 'Repetir Tales of Magic o regresar al hotel temprano', kind: 'show', rating: 4, tag: 'Recuperación' },
     ]
   },
   {
@@ -623,15 +624,16 @@ const TRIP_DAYS = [
     zone: 'Frozen + Pixar + Marvel',
     reservation: { name: 'PYM Kitchen', time: '15:15', emoji: '🥪', zone: 'Avengers Campus' },
     items: [
-      { time: '08:45', title: 'Entrada temprana', meta: 'Solicitar cola virtual para Elsa y Anna en la app', emoji: '✨', highlight: true, note: 'La cola virtual para conocer a Elsa y Anna se obtiene desde la app oficial una vez dentro del parque.' },
-      { time: '09:00', title: 'World of Frozen', meta: 'Frozen Ever After, Arendelle y tiendas', badge: 'daw', zone: 'World of Frozen', emoji: '❄️' },
-      { time: '11:30', title: 'A Celebration in Arendelle', meta: 'Consultar horario en la app', arrive: 30, rating: 4, kind: 'show' },
-      { time: '12:00', title: 'Adventure Way', meta: 'Raiponce Tangled Spin y paseo por el lago', badge: 'daw', zone: 'Adventure Way', emoji: '🐸' },
-      { time: '13:00', title: 'Worlds of Pixar', meta: 'Ratatouille y Cars Road Trip', badge: 'daw', zone: 'Worlds of Pixar', emoji: '🐀' },
+      { time: '07:45', title: 'Llegada al control de seguridad', meta: '20-30 min antes del inicio del EMT · Preparad la app para la cola virtual', emoji: '🏨', tag: 'Ritmo familiar' },
+      { time: '08:15', title: 'Extra Magic Time', meta: 'World of Frozen / Frozen Ever After si está incluido en EMT. Si no, priorizar Crush\'s Coaster.', badge: 'emt', zone: 'World of Frozen', emoji: '✨', highlight: true, tag: 'Máxima prioridad', note: 'El orden exacto depende de si Frozen Ever After opera durante Extra Magic Time. La app oficial de ese día manda.' },
+      { time: '09:45', title: 'World of Frozen', meta: 'Arendelle, Frozen Ever After y solicitar cola virtual para Elsa y Anna si está disponible', badge: 'daw', zone: 'World of Frozen', emoji: '❄️', tag: 'Frozen', note: 'No prometáis un encuentro con Elsa y Anna sin haber conseguido antes la cola virtual.' },
+      { time: '11:45', title: 'A Celebration in Arendelle', meta: 'World of Frozen · Sesión que mejor encaje', arrive: 25, rating: 4, kind: 'show', tag: 'Espectáculo' },
+      { time: '12:30', title: 'Adventure Way', meta: 'Paseo por el lago y atracciones familiares de la zona', badge: 'daw', zone: 'Adventure Way', emoji: '🐸', tag: 'Camino natural' },
+      { time: '13:30', title: 'Worlds of Pixar', meta: 'Ratatouille y una atracción cercana · Camino hacia Marvel', badge: 'daw', zone: 'Worlds of Pixar', emoji: '🐀', tag: 'Hacia Marvel' },
       { time: '15:15', title: 'Comida: PYM Kitchen', meta: 'Reserva confirmada · Avengers Campus', kind: 'meal', emoji: '🥪' },
-      { time: '16:45', title: 'Avengers Campus', meta: 'Spider-Man W.E.B., Flight Force y apariciones Marvel', badge: 'daw', zone: 'Avengers Campus', emoji: '🦸' },
-      { time: '19:00', title: 'Mickey and the Magician', meta: 'World Premiere Plaza (si encaja con la última sesión)', arrive: 30, rating: 5, kind: 'show' },
-      { time: '22:00', title: 'Disney Cascade of Lights', meta: 'Espectáculo nocturno · Adventure Bay', arrive: 60, rating: 5, kind: 'show', highlight: true },
+      { time: '16:45', title: 'Avengers Campus', meta: 'Spider-Man W.E.B., Flight Force para quien quiera y apariciones Marvel', badge: 'daw', zone: 'Avengers Campus', emoji: '🦸', tag: 'Zona única' },
+      { time: '19:00', title: 'Mickey and the Magician', meta: 'World Premiere Plaza si hay sesión compatible', arrive: 30, rating: 5, kind: 'show', tag: 'Interior' },
+      { time: '22:00', title: 'Disney Cascade of Lights', meta: 'Espectáculo nocturno · Adventure Bay si está programado', arrive: 45, rating: 5, kind: 'show', highlight: true, tag: 'Final del día' },
     ]
   },
   {
@@ -640,15 +642,15 @@ const TRIP_DAYS = [
     zone: 'Adventureland + Fantasyland',
     reservation: { name: "Captain Jack's", time: '14:45', emoji: '🏴‍☠️', zone: 'Adventureland' },
     items: [
-      { time: '09:00', title: 'Pirates of the Caribbean', meta: 'Ir pronto antes de que crezca la cola', badge: 'dlp', zone: 'Adventureland', emoji: '🏴‍☠️' },
-      { time: '10:30', title: 'Adventure Isle', meta: 'Cuevas y puente colgante', badge: 'dlp', zone: 'Adventureland', emoji: '🌴' },
-      { time: '11:45', title: 'Cabaña de Robinson + Indiana Jones', meta: 'Zona alta de Adventureland', badge: 'dlp', zone: 'Adventureland', emoji: '🎩' },
-      { time: '12:45', title: 'Fotos y atracciones pendientes', meta: 'Paseo tranquilo por Adventureland', emoji: '📸' },
-      { time: '14:45', title: "Comida: Captain Jack's", meta: 'Reserva confirmada · DENTRO de Pirates of the Caribbean', kind: 'meal', emoji: '🏴‍☠️', note: 'La mesa está a orillas del agua dentro de la atracción. Ambientación imprescindible.' },
-      { time: '16:15', title: 'Fantasyland', meta: 'Atracciones que falten o repetir favoritas', badge: 'dlp', zone: 'Fantasyland', emoji: '🎡' },
-      { time: '18:00', title: 'Main Street', meta: 'Cabalgata, compras y fotos', emoji: '🛍️' },
-      { time: '20:00', title: 'Disney Stars on Parade (2° pase)', meta: 'Consultar horario ese día', arrive: 30, rating: 4, kind: 'show' },
-      { time: '22:00', title: 'Disney Tales of Magic', meta: 'ÚLTIMA NOCHE — llegad con tiempo', arrive: 75, rating: 5, kind: 'show', highlight: true },
+      { time: '07:45', title: 'Llegada al control de seguridad', meta: '20-30 min antes del inicio del EMT', emoji: '🏨', tag: 'Ritmo familiar' },
+      { time: '08:15', title: 'Extra Magic Time', meta: 'Repetir la favorita más demandada: Big Thunder, Peter Pan o Buzz según colas de días anteriores', badge: 'emt', zone: 'Según colas previas', emoji: '✨', highlight: true, tag: 'Repetición inteligente' },
+      { time: '09:30', title: 'Adventureland', meta: 'Pirates of the Caribbean, Adventure Isle y cuevas', badge: 'dlp', zone: 'Adventureland', emoji: '🏴‍☠️', tag: 'Zona del restaurante' },
+      { time: '11:30', title: 'Cabaña de Robinson + Indiana Jones', meta: 'Para quienes cumplan altura y quieran', badge: 'dlp', zone: 'Adventureland', emoji: '🎩', tag: 'Opcional' },
+      { time: '12:30', title: 'Adventureland (margen)', meta: 'Fotos, paseo tranquilo y atracciones pendientes sin alejarse', badge: 'dlp', zone: 'Adventureland', emoji: '📸', tag: 'Margen' },
+      { time: '14:45', title: "Comida: Captain Jack's", meta: 'Reserva confirmada · DENTRO de Pirates of the Caribbean', kind: 'meal', emoji: '🏴‍☠️', note: 'La mesa está a orillas del agua dentro de la atracción. Es el mejor día para concentrar la mañana en Adventureland.' },
+      { time: '16:15', title: 'Fantasyland', meta: 'Atracciones familiares pendientes o repetir Small World / Peter Pan', badge: 'dlp', zone: 'Fantasyland', emoji: '🎡', tag: 'Zona contigua' },
+      { time: '18:00', title: 'Main Street', meta: 'Cabalgata, compras y fotos finales', emoji: '🛍️', tag: 'Despedida' },
+      { time: '22:00', title: 'Disney Tales of Magic', meta: 'ÚLTIMA NOCHE — Central Plaza · Sitio 45-60 min antes para 9 personas', arrive: 60, rating: 5, kind: 'show', highlight: true, tag: 'Última noche' },
     ]
   },
   {
@@ -657,14 +659,16 @@ const TRIP_DAYS = [
     zone: 'Frozen + Adventure Way',
     reservation: null,
     items: [
-      { time: '09:00', title: 'World of Frozen', meta: 'Repetir Frozen Ever After o intentar el encuentro con Elsa y Anna', badge: 'daw', zone: 'World of Frozen', emoji: '❄️' },
-      { time: '11:00', title: 'Disney Princess Cavalcade', meta: 'Adventure Bay — consultar horario', arrive: 20, rating: 4, kind: 'show' },
-      { time: '12:00', title: 'Adventure Way / Pixar', meta: 'Raiponce, Ratatouille o atracciones pendientes', badge: 'daw', zone: 'Adventure Way', emoji: '🎢' },
-      { time: '13:30', title: 'Comida rápida', meta: 'En la zona que hayáis elegido', emoji: '🍰' },
-      { time: '14:15', title: 'Hotel: recoger equipaje', meta: 'Preparar salida', emoji: '🧳' },
-      { time: '15:30', title: 'Salida en van privado hacia Paris-Orly', meta: '~1 h de trayecto', emoji: '🚐', highlight: true, note: 'Disney Cascade of Lights se celebra de noche y NO encaja el domingo por la salida al aeropuerto.' },
-      { time: '17:00', title: 'Llegada estimada a ORY', meta: 'Margen amplio para facturación y controles', emoji: '🛩️' },
-      { time: '20:40', title: 'Vuelo de regreso', meta: 'Paris-Orly → casa', emoji: '✈️' },
+      { time: '07:45', title: 'Llegada al control de seguridad', meta: '20-30 min antes del inicio del EMT · Último día', emoji: '🏨', tag: 'Ritmo familiar' },
+      { time: '08:15', title: 'Extra Magic Time', meta: "Repetir Frozen Ever After o Crush's Coaster, según lo que haya quedado pendiente", badge: 'emt', zone: 'World of Frozen / Pixar', emoji: '✨', highlight: true, tag: 'Última prioridad' },
+      { time: '09:30', title: 'Frozen / Pixar', meta: 'Última visita a Frozen, Ratatouille o Cars', badge: 'daw', zone: 'World of Frozen / Pixar', emoji: '❄️', tag: 'Sin prisas' },
+      { time: '11:30', title: 'Cavalcade o espectáculo diurno', meta: 'Adventure Bay si coincide', arrive: 20, rating: 4, kind: 'show', tag: 'Cerca' },
+      { time: '12:30', title: 'Comida rápida', meta: 'En la zona que hayáis elegido · Sin restaurante de mesa', emoji: '🍰', tag: 'Control del tiempo' },
+      { time: '13:45', title: 'Tiendas / salida', meta: 'Compras finales y regreso al hotel', emoji: '🛍️', tag: 'Cierre' },
+      { time: '14:30', title: 'Hotel', meta: 'Recoger equipaje y comprobar transporte', emoji: '🧳', tag: 'Margen' },
+      { time: '15:30', title: 'Salida en van privado hacia ORY', meta: 'Salida entre 15:30 y 15:45 · No retrasar', emoji: '🚐', highlight: true, tag: 'No retrasar', note: 'Para 9 personas con equipaje, reservad un vehículo adecuado y confirmad el punto exacto de recogida el día anterior.' },
+      { time: '17:00', title: 'Llegada estimada a ORY', meta: 'Margen amplio para facturación y controles', emoji: '🛩️', tag: 'Margen amplio' },
+      { time: '20:40', title: 'Vuelo de regreso', meta: 'Paris-Orly → casa', emoji: '✈️', tag: 'Salida' },
     ]
   },
 ];
@@ -803,11 +807,14 @@ function renderPlan() {
     const stars = it.rating ? '★'.repeat(it.rating) + '☆'.repeat(5 - it.rating) : '';
     const arrive = it.arrive ? `<span class="timeline-arrive">⏱ Llegar ${it.arrive} min antes</span>` : '';
     const rating = stars ? `<span class="timeline-rating">${stars}</span>` : '';
-    const badge  = it.badge === 'dlp' ? '<span class="timeline-badge dlp">Disneyland Park</span>'
+    const badge  = it.badge === 'emt' ? '<span class="timeline-badge emt">✨ Extra Magic Time</span>'
+                  : it.badge === 'dlp' ? '<span class="timeline-badge dlp">Disneyland Park</span>'
                   : it.badge === 'daw' ? '<span class="timeline-badge daw">Adventure World</span>'
                   : '';
+    const tag    = it.tag ? `<span class="timeline-tag">${it.tag}</span>` : '';
     const note   = it.note ? `<div class="timeline-note">💡 ${it.note}</div>` : '';
     const emoji  = it.emoji ? `<span class="timeline-emoji">${it.emoji}</span>` : '';
+    if (it.badge === 'emt') classes.push('emt');
 
     return `
       <div class="${classes.join(' ')}">
@@ -819,7 +826,10 @@ function renderPlan() {
             ${arrive}
             ${rating}
           </div>
-          ${badge}
+          <div class="timeline-badges">
+            ${badge}
+            ${tag}
+          </div>
           ${note}
         </div>
       </div>

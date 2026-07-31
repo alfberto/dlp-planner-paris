@@ -1666,3 +1666,48 @@ button { cursor: pointer; background: none; border: none; font: inherit; color: 
     justify-content: center;
   }
 }
+
+/* ─── EXTRA MAGIC TIME ─────────────────────────────────────── */
+.timeline-badge.emt {
+  background: linear-gradient(135deg, #f9d648, #e8a628);
+  color: #4a2c00;
+  box-shadow: 0 2px 8px rgba(232, 166, 40, 0.35);
+  font-weight: 800;
+}
+.timeline-item.emt {
+  position: relative;
+}
+.timeline-item.emt .timeline-content {
+  background: linear-gradient(135deg, rgba(249, 214, 72, 0.08), rgba(232, 62, 140, 0.05));
+  border-left: 3px solid #e8a628;
+  border-radius: var(--radius-md);
+  padding: 10px 12px 10px 14px;
+  margin-left: -4px;
+}
+.timeline-item.emt .timeline-title {
+  color: #b57200;
+}
+[data-theme="dark"] .timeline-item.emt .timeline-content {
+  background: linear-gradient(135deg, rgba(249, 214, 72, 0.14), rgba(232, 62, 140, 0.08));
+}
+[data-theme="dark"] .timeline-item.emt .timeline-title {
+  color: #f9d648;
+}
+
+.timeline-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.timeline-tag {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-offset);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  letter-spacing: 0.02em;
+}
