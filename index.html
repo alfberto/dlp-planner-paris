@@ -12,7 +12,7 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
-  <link rel="stylesheet" href="style.css?v=1776113494" />
+  <link rel="stylesheet" href="style.css?v=1785000000" />
 </head>
 <body>
 
@@ -46,6 +46,30 @@
     <div class="hero-badges">
       <span class="badge badge-open" id="park-status">🟢 Parque abierto</span>
       <span class="badge badge-hotel" id="hotel-badge">🏨 Newport Bay Club</span>
+    </div>
+  </section>
+
+  <!-- ── PLAN DIARIO ────────────────────────────────────────── -->
+  <section class="card card-plan" aria-label="Plan diario del viaje">
+    <h2 class="card-title">
+      <i data-lucide="calendar-check" class="card-icon"></i>
+      Plan del día
+      <span class="plan-subtitle" id="plan-subtitle"></span>
+    </h2>
+
+    <!-- Tabs de días -->
+    <div class="day-tabs" id="day-tabs" role="tablist">
+      <!-- Filled by JS -->
+    </div>
+
+    <!-- Reserva destacada -->
+    <div class="reservation-banner" id="reservation-banner">
+      <!-- Filled by JS -->
+    </div>
+
+    <!-- Timeline del día -->
+    <div class="day-timeline" id="day-timeline">
+      <!-- Filled by JS -->
     </div>
   </section>
 
@@ -225,9 +249,9 @@
 
   <!-- ── BOTTOM NAV ─────────────────────────────────────────── -->
   <nav class="bottom-nav" aria-label="Navegación rápida">
-    <button class="nav-btn active" data-scroll="card-hours">
-      <i data-lucide="clock"></i>
-      <span>Horario</span>
+    <button class="nav-btn active" data-scroll="card-plan">
+      <i data-lucide="calendar-check"></i>
+      <span>Plan</span>
     </button>
     <button class="nav-btn" data-scroll="card-weather">
       <i data-lucide="cloud-sun"></i>
@@ -239,10 +263,10 @@
     </button>
     <button class="nav-btn" data-scroll="card-attractions">
       <i data-lucide="zap"></i>
-      <span>Atracciones</span>
+      <span>Colas</span>
     </button>
   </nav>
 
-  <script src="app.js?v=1776113494"></script>
+  <script src="app.js?v=1785000000"></script>
 </body>
 </html>

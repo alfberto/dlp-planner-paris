@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initParkTabs();
   initBottomNav();
   initProgress();
+  renderPlan();
 
   // Clima e.g. y colas en paralelo
   loadWeather();
@@ -570,4 +571,190 @@ function updateThemeIcon(btn, theme) {
 function setText(id, text) {
   const el = document.getElementById(id);
   if (el) el.textContent = text;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PLAN DIARIO DEL VIAJE (19-23 agosto 2026)
+   Fuente: itinerario PDF + horarios oficiales de espectáculos
+   ═══════════════════════════════════════════════════════════════ */
+
+const TRIP_DAYS = [
+  {
+    key: 'mie', date: '2026-08-19', dow: 'Mié', day: 19, label: 'Miércoles 19',
+    park: 'Disneyland Park',
+    reservation: { name: "Silver Spur Steakhouse", time: '15:15', emoji: '🥩' },
+    items: [
+      { time: '08:30', title: 'Llegada al hotel', meta: 'Check-in temprano y equipaje en consigna', emoji: '🏨' },
+      { time: '09:00', title: 'Disneyland Park — primeras horas', meta: 'Peter Pan, Dumbo, Buzz Lightyear, Big Thunder, Pirates', badge: 'dlp', emoji: '🏰' },
+      { time: '11:30', title: 'Disney Stars on Parade', meta: 'Cabalgata principal', arrive: 30, rating: 4, kind: 'show' },
+      { time: '12:30', title: 'The Lion King', meta: '1ª sesión — imprescindible', arrive: 30, rating: 5, kind: 'show' },
+      { time: '15:15', title: "Comida: Silver Spur Steakhouse", meta: 'Reserva confirmada', kind: 'meal', emoji: '🥩' },
+      { time: '16:05', title: 'The Lion King (2ª sesión)', meta: 'Mejor opción si coméis tranquilos', arrive: 40, rating: 5, kind: 'show', note: 'Si ya lo habéis visto, aprovechad Fantasyland para atracciones familiares.' },
+      { time: '17:55', title: 'A Million Splashes of Colour', meta: 'Show acuático', arrive: 20, rating: 3, kind: 'show' },
+      { time: '19:00', title: 'Main Street y compras', meta: 'Paseo tranquilo antes del show nocturno', emoji: '🛍️' },
+      { time: '22:00', title: 'Disney Tales of Magic', meta: 'Espectáculo nocturno del castillo', arrive: 75, rating: 5, kind: 'show', highlight: true },
+    ]
+  },
+  {
+    key: 'jue', date: '2026-08-20', dow: 'Jue', day: 20, label: 'Jueves 20',
+    park: 'Disney Adventure World',
+    reservation: { name: 'Agrabah Cafe Restaurant', time: '15:30', emoji: '🧞' },
+    items: [
+      { time: '08:30', title: 'Extra Magic Time', meta: 'Acceso directo a Adventure World con la pulsera del hotel', emoji: '✨' },
+      { time: '09:00', title: 'Adventure World — primeras horas', meta: 'Spider-Man W.E.B., Ratatouille, Cars Road Trip, Toy Story, Crush’s Coaster', badge: 'daw', emoji: '🎬' },
+      { time: '11:45', title: 'Mickey and the Magician', meta: 'Show interior — muy recomendado para los niños', arrive: 30, rating: 5, kind: 'show' },
+      { time: '13:15', title: 'TOGETHER: A Pixar Musical Adventure', meta: 'Show musical exterior', arrive: 25, rating: 4, kind: 'show' },
+      { time: '15:30', title: 'Comida: Agrabah Cafe Restaurant', meta: 'Reserva confirmada · Ambiente Aladdin', kind: 'meal', emoji: '🧞' },
+      { time: '16:30', title: 'Mickey and the Magician (repetición opcional)', meta: 'O aprovechar para Marvel Campus', arrive: 25, rating: 4, kind: 'show' },
+      { time: '18:00', title: 'TOGETHER (2ª sesión)', meta: 'Alternativa si os perdéis la primera', arrive: 20, rating: 4, kind: 'show' },
+      { time: '19:30', title: 'Disney Village', meta: 'Paseo, tiendas y cena ligera', emoji: '🌌' },
+      { time: '20:30', title: 'Avengers Unite!', meta: 'Solo si se programa ese día — comprobar en la app', arrive: 25, rating: 4, kind: 'show' },
+    ]
+  },
+  {
+    key: 'vie', date: '2026-08-21', dow: 'Vie', day: 21, label: 'Viernes 21',
+    park: 'Disneyland Park',
+    reservation: { name: 'PYM Kitchen', time: '15:15', emoji: '🥪' },
+    items: [
+      { time: '08:30', title: 'Regreso a Disneyland Park', meta: 'Extra Magic Time del hotel', emoji: '🏰' },
+      { time: '09:00', title: 'Atracciones pendientes', meta: 'Big Thunder, Hyperspace Mountain, Pirates, Buzz, Star Tours', badge: 'dlp', emoji: '🎢' },
+      { time: '11:30', title: 'Disney Stars on Parade', meta: 'Cabalgata principal', arrive: 30, rating: 4, kind: 'show' },
+      { time: '13:30', title: 'The Lion King', meta: 'Sesión de mediodía', arrive: 30, rating: 5, kind: 'show' },
+      { time: '15:15', title: 'Comida: PYM Kitchen', meta: 'Reserva confirmada · Marvel Campus (Adventure World)', kind: 'meal', emoji: '🥪', note: 'PYM Kitchen está en Adventure World. Cruzar al otro parque — unos 5 min andando.' },
+      { time: '15:30', title: 'A Million Splashes of Colour', meta: 'Show acuático (si os da tiempo)', arrive: 20, rating: 3, kind: 'show' },
+      { time: '17:05', title: 'The Lion King (2ª sesión)', meta: 'Repetición si os encantó', arrive: 40, rating: 5, kind: 'show' },
+      { time: '18:30', title: 'Personajes, fotos y compras', meta: 'Cabalgata sorpresa, encuentros y Main Street', emoji: '📸' },
+      { time: '22:00', title: 'Disney Tales of Magic', meta: 'Espectáculo nocturno del castillo', arrive: 75, rating: 5, kind: 'show', highlight: true },
+    ]
+  },
+  {
+    key: 'sab', date: '2026-08-22', dow: 'Sáb', day: 22, label: 'Sábado 22',
+    park: 'Día flexible',
+    reservation: { name: "Captain Jack's", time: '14:45', emoji: '🏴‍☠️' },
+    items: [
+      { time: '09:00', title: 'Día flexible', meta: 'Repetir favoritas y completar pendientes', emoji: '⭐' },
+      { time: '09:30', title: 'Atracciones favoritas', meta: 'Encuentros con personajes y fotos', badge: 'dlp', emoji: '🎡' },
+      { time: '11:30', title: 'Disney Stars on Parade', meta: 'Cabalgata (última oportunidad)', arrive: 30, rating: 4, kind: 'show' },
+      { time: '13:15', title: 'Mickey and the Magician', meta: 'En Adventure World — imprescindible', arrive: 25, rating: 5, kind: 'show' },
+      { time: '14:45', title: "Comida: Captain Jack's", meta: 'Reserva confirmada · DENTRO de Pirates of the Caribbean', kind: 'meal', emoji: '🏴‍☠️', note: 'Ambientación imprescindible: la mesa está a orillas del agua dentro de la atracción.' },
+      { time: '15:00', title: 'Frozen — A Celebration in Arendelle', meta: 'Show musical en Adventure World', arrive: 30, rating: 4, kind: 'show' },
+      { time: '17:00', title: 'Fotos, compras y ritmo relajado', meta: 'Ritmo tranquilo para preparar la última noche', emoji: '🛍️' },
+      { time: '22:00', title: 'Disney Tales of Magic', meta: 'ÚLTIMA NOCHE — llegad con tiempo', arrive: 75, rating: 5, kind: 'show', highlight: true },
+    ]
+  },
+  {
+    key: 'dom', date: '2026-08-23', dow: 'Dom', day: 23, label: 'Domingo 23',
+    park: 'Día de salida',
+    reservation: null,
+    items: [
+      { time: '08:00', title: 'Desayuno y check-out', meta: 'Dejar equipaje en consigna', emoji: '🥐' },
+      { time: '09:00', title: 'Últimas atracciones', meta: 'Repetir favoritas antes de comer', badge: 'dlp', emoji: '🎢' },
+      { time: '11:30', title: 'Disney Stars on Parade', meta: 'Cabalgata de despedida', arrive: 30, rating: 4, kind: 'show' },
+      { time: '12:30', title: 'The Lion King', meta: 'Solo si os da tiempo antes de comer', arrive: 30, rating: 5, kind: 'show', note: 'Con la salida a las 16:00 hacia Orly, saltarse el show si veis apretado el tiempo.' },
+      { time: '13:00', title: 'Comida de despedida', meta: 'Downtown Restaurant (buffet) o quick service en el parque', emoji: '🍰' },
+      { time: '14:30', title: 'Recoger equipaje', meta: 'Preparar salida', emoji: '🧳' },
+      { time: '16:00', title: 'Salida en van privado hacia Orly', meta: '~1 h de trayecto · margen amplio para el vuelo', emoji: '🚐', highlight: true },
+      { time: '20:40', title: 'Vuelo de regreso', meta: 'Paris-Orly → casa', emoji: '✈️' },
+    ]
+  },
+];
+
+let PLAN_ACTIVE_KEY = null;
+
+function todayTripKey() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  const iso = `${y}-${m}-${d}`;
+  return TRIP_DAYS.find(td => td.date === iso)?.key || null;
+}
+
+function renderPlan() {
+  const tabs = document.getElementById('day-tabs');
+  if (!tabs) return;
+
+  const todayKey = todayTripKey();
+  PLAN_ACTIVE_KEY = PLAN_ACTIVE_KEY || todayKey || TRIP_DAYS[0].key;
+
+  // Render tabs
+  tabs.innerHTML = TRIP_DAYS.map(td => `
+    <button class="day-tab ${td.key === PLAN_ACTIVE_KEY ? 'active' : ''} ${td.key === todayKey ? 'today' : ''}"
+            data-day-key="${td.key}" role="tab" aria-selected="${td.key === PLAN_ACTIVE_KEY}">
+      <span class="day-tab-dow">${td.dow}</span>
+      <span class="day-tab-date">${td.day}</span>
+    </button>
+  `).join('');
+
+  tabs.querySelectorAll('.day-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      PLAN_ACTIVE_KEY = btn.dataset.dayKey;
+      renderPlan();
+    });
+  });
+
+  const active = TRIP_DAYS.find(td => td.key === PLAN_ACTIVE_KEY);
+  if (!active) return;
+
+  // Subtitle
+  const sub = document.getElementById('plan-subtitle');
+  if (sub) sub.textContent = `· ${active.park}`;
+
+  // Reserva destacada
+  const banner = document.getElementById('reservation-banner');
+  if (banner) {
+    if (active.reservation) {
+      banner.className = 'reservation-banner';
+      banner.innerHTML = `
+        <div class="reservation-icon">${active.reservation.emoji}</div>
+        <div class="reservation-info">
+          <div class="reservation-label">Reserva confirmada</div>
+          <div class="reservation-name">${active.reservation.name}</div>
+        </div>
+        <div class="reservation-time">${active.reservation.time}</div>
+      `;
+    } else {
+      banner.className = 'reservation-banner empty';
+      banner.innerHTML = '';
+    }
+  }
+
+  // Timeline
+  const tl = document.getElementById('day-timeline');
+  if (!tl) return;
+
+  tl.innerHTML = active.items.map(it => {
+    const classes = ['timeline-item'];
+    if (it.highlight) classes.push('highlight');
+    if (it.kind === 'meal') classes.push('meal');
+    if (it.kind === 'show') classes.push('show');
+
+    const stars = it.rating ? '★'.repeat(it.rating) + '☆'.repeat(5 - it.rating) : '';
+    const arrive = it.arrive ? `<span class="timeline-arrive">⏱ Llegar ${it.arrive} min antes</span>` : '';
+    const rating = stars ? `<span class="timeline-rating">${stars}</span>` : '';
+    const badge  = it.badge === 'dlp' ? '<span class="timeline-badge dlp">Disneyland Park</span>'
+                  : it.badge === 'daw' ? '<span class="timeline-badge daw">Adventure World</span>'
+                  : '';
+    const note   = it.note ? `<div class="timeline-note">💡 ${it.note}</div>` : '';
+    const emoji  = it.emoji ? `<span class="timeline-emoji">${it.emoji}</span>` : '';
+
+    return `
+      <div class="${classes.join(' ')}">
+        <div class="timeline-time">${it.time}</div>
+        <div class="timeline-content">
+          <div class="timeline-title">${emoji}${it.title}</div>
+          <div class="timeline-meta">
+            <span>${it.meta}</span>
+            ${arrive}
+            ${rating}
+          </div>
+          ${badge}
+          ${note}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Reinicializar iconos (aunque no hay lucide en timeline)
+  if (window.lucide) lucide.createIcons();
 }
