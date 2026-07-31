@@ -1638,3 +1638,31 @@ button { cursor: pointer; background: none; border: none; font: inherit; color: 
   text-align: center;
 }
 .chk-modal-feedback.error { color: var(--color-magic); }
+
+/* ─── BOTÓN WHATSAPP ─────────────────────────────────────── */
+.chk-modal-btn.whatsapp {
+  background: #25D366;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.chk-modal-btn.whatsapp:hover {
+  background: #1ebe57;
+  filter: brightness(1.05);
+}
+.chk-modal-btn.whatsapp svg {
+  flex-shrink: 0;
+}
+.chk-modal-actions {
+  flex-wrap: wrap;
+}
+@media (max-width: 420px) {
+  .chk-modal-actions {
+    flex-direction: column-reverse;
+  }
+  .chk-modal-actions .chk-modal-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1078,12 +1078,23 @@ function decodeProgress(code) {
   return out;
 }
 
+function buildWhatsAppMessage(code, count) {
+  const url = 'https://alfberto.github.io/dlp-planner-paris/';
+  const msg =
+    `🏰 *DLP Planner — Progreso de la checklist*\n\n` +
+    `He marcado ${count} atracciones/espectáculos. Ábre la app y pega este código en "Importar progreso" para sincronizar:\n\n` +
+    `\`${code}\`\n\n` +
+    `👉 ${url}`;
+  return `https://wa.me/?text=${encodeURIComponent(msg)}`;
+}
+
 function openChkModal(mode) {
   const modal = document.getElementById('chk-modal');
   const title = document.getElementById('chk-modal-title');
   const hint = document.getElementById('chk-modal-hint');
   const ta = document.getElementById('chk-modal-textarea');
   const primary = document.getElementById('chk-modal-primary');
+  const whatsappBtn = document.getElementById('chk-modal-whatsapp');
   const feedback = document.getElementById('chk-modal-feedback');
   feedback.textContent = '';
   feedback.classList.remove('error');
@@ -1093,9 +1104,19 @@ function openChkModal(mode) {
     const ids = Object.keys(data);
     const code = encodeProgress(data);
     title.textContent = 'Compartir progreso';
-    hint.innerHTML = `Tienes <strong>${ids.length}</strong> elementos marcados. Copia este código y envíaselo por WhatsApp a tu familia — ellos podrán importarlo aquí.`;
+    hint.innerHTML = `Tienes <strong>${ids.length}</strong> elementos marcados. Envíalo por WhatsApp con un toque, o copia el código para pegarlo donde quieras.`;
     ta.value = code;
     ta.readOnly = true;
+    // Mostrar y configurar el botón de WhatsApp
+    if (whatsappBtn) {
+      whatsappBtn.hidden = false;
+      whatsappBtn.onclick = () => {
+        const waUrl = buildWhatsAppMessage(code, ids.length);
+        window.open(waUrl, '_blank', 'noopener,noreferrer');
+        feedback.textContent = '✓ Abriendo WhatsApp…';
+        feedback.classList.remove('error');
+      };
+    }
     primary.innerHTML = '<i data-lucide="copy"></i> Copiar código';
     primary.onclick = async () => {
       try {
@@ -1119,6 +1140,7 @@ function openChkModal(mode) {
     ta.value = '';
     ta.readOnly = false;
     ta.placeholder = 'Pega aquí el código…';
+    if (whatsappBtn) whatsappBtn.hidden = true;
     primary.innerHTML = '<i data-lucide="check"></i> Importar';
     primary.onclick = () => {
       const code = ta.value.trim();
