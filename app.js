@@ -134,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFilters();
   initParkTabs();
   initBottomNav();
+  initVisualViewportAnchor();
   initProgress();
   renderPlan();
   renderHighlights();
@@ -519,6 +520,29 @@ function initParkTabs() {
 }
 
 /* ── BOTTOM NAV ─────────────────────────────────────────────── */
+function initVisualViewportAnchor() {
+  // Ancla la .bottom-nav al visual viewport para que quede pegada al borde inferior
+  // real de la pantalla, incluso cuando la barra del navegador móvil está visible o cambia.
+  if (!window.visualViewport) return;
+  const root = document.documentElement;
+  let raf = 0;
+  const update = () => {
+    const vv = window.visualViewport;
+    // Distancia entre el borde inferior del layout viewport y el del visual viewport
+    const bottomGap = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
+    root.style.setProperty('--vv-bottom', bottomGap + 'px');
+  };
+  const schedule = () => {
+    if (raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(update);
+  };
+  window.visualViewport.addEventListener('resize', schedule);
+  window.visualViewport.addEventListener('scroll', schedule);
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('orientationchange', schedule);
+  update();
+}
+
 function initBottomNav() {
   const navBtns = document.querySelectorAll('.nav-btn');
 

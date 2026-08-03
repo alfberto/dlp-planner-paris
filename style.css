@@ -794,9 +794,13 @@ button { cursor: pointer; background: none; border: none; font: inherit; color: 
 /* ─── BOTTOM NAV ──────────────────────────────────────────── */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
   left: 0;
   right: 0;
+  bottom: 0;
+  /* Anclaje al visual viewport (móvil con barra del navegador) */
+  /* --vv-bottom lo calcula JS con window.visualViewport para pegar la barra al borde real */
+  transform: translateY(calc(-1 * var(--vv-bottom, 0px)));
+  will-change: transform;
   z-index: 50;
   display: flex;
   background: color-mix(in srgb, var(--color-surface) 95%, transparent);
