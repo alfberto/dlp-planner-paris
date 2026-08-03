@@ -796,11 +796,8 @@ button { cursor: pointer; background: none; border: none; font: inherit; color: 
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
-  /* Anclaje al visual viewport (móvil con barra del navegador) */
-  /* --vv-bottom lo calcula JS con window.visualViewport para pegar la barra al borde real */
-  transform: translateY(calc(-1 * var(--vv-bottom, 0px)));
-  will-change: transform;
+  /* bottom se ajusta dinámicamente vía JS para seguir el visual viewport en móvil */
+  bottom: var(--vv-bottom, 0px);
   z-index: 50;
   display: flex;
   background: color-mix(in srgb, var(--color-surface) 95%, transparent);
@@ -808,6 +805,7 @@ button { cursor: pointer; background: none; border: none; font: inherit; color: 
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid var(--color-border);
   padding-bottom: env(safe-area-inset-bottom, 0);
+  transition: bottom 120ms ease-out;
 }
 
 .nav-btn {

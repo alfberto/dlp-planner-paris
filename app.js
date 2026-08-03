@@ -540,7 +540,13 @@ function initVisualViewportAnchor() {
   window.visualViewport.addEventListener('scroll', schedule);
   window.addEventListener('scroll', schedule, { passive: true });
   window.addEventListener('orientationchange', schedule);
+  window.addEventListener('load', schedule);
+  window.addEventListener('pageshow', schedule);
+  // Varios intentos escalonados para captar el visualViewport ya estable
   update();
+  setTimeout(update, 100);
+  setTimeout(update, 500);
+  setTimeout(update, 1500);
 }
 
 function initBottomNav() {
